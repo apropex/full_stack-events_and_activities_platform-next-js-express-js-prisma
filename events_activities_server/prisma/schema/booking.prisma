@@ -1,0 +1,35 @@
+model Booking {
+  id            String        @id @default(uuid())
+  userId        String
+  eventId       String
+  paymentStatus PaymentStatus @default(PENDING)
+
+  // One-to-one Payment
+  paymentId String?  @unique
+  payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  transactionId String?
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event Event @relation("EventBookings", fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([eventId])
+}
+
+model Payment {
+  id          String        @id @default(uuid())
+  amount      Float
+  trxId       String        @unique
+  paymentInfo Json
+  invoiceUrl  String?
+  status      PaymentStatus
+  booking     Booking?
+
+  createdAt DateTime @default(now())
+
+  @@index([trxId])
+}

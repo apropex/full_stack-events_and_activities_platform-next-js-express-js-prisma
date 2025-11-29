@@ -1,7 +1,8 @@
 enum Role {
   USER
   HOST
-  ADMIN
+    ADMIN
+
 }
 
 enum UserStatus {
@@ -14,4 +15,10 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

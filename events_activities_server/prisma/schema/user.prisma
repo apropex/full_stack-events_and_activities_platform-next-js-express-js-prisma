@@ -8,11 +8,37 @@ model User {
   role       Role       @default(USER)
   avatar     String?
   bio        String?
-  interests  String[] // like: ["Hiking", "Music", "Coding"]
+  interests  String[]
   status     UserStatus @default(ACTIVE)
   isVerified Boolean    @default(false)
   isDeleted  Boolean    @default(false)
   isPremium  Boolean    @default(false)
-  updatedAt  DateTime   @updatedAt
-  createdAt  DateTime   @default(now())
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  // Relations
+  events   Event[]     @relation("EventOrganizer")
+  bookings Booking[]
+  images   UserAvatar? @relation("UserImage")
+
+  @@index([email])
+}
+
+model UserAvatar {
+  id       String  @id @default(uuid())
+  userId   String  @unique
+  url      String
+  publicId String  @unique
+  format   String?
+  width    Int?
+  height   Int?
+  bytes    Int?
+  folder   String?
+
+  createdAt DateTime @default(now())
+
+  user User @relation("UserImage", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

@@ -1,42 +1,61 @@
 import fs from "fs";
 import multer from "multer";
-import path, { extname } from "path";
-import { join } from "../../../utils";
+import path from "path";
+import { join } from "../../../utils"; // Adjust import path as needed
 
+// Define the upload directory
 const uploadPath = path.join(process.cwd(), "uploads");
+
+// Ensure the upload directory exists (synchronously at startup – safe & common practice)
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
+
+// Configure Multer storage
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, uploadPath);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     const uniqueSuffix = join(
-      "ph-health-care",
+      "event-activity-platform",
       "-",
-      Date.now(),
+      Date.now().toString(),
       "-",
-      Math.round(Math.random() * 1000),
+      Math.round(Math.random() * 1e9).toString(),
     );
-    const ext = extname(file.originalname);
+    const ext = path.extname(file.originalname);
     cb(null, `${file.fieldname}-${uniqueSuffix}${ext}`);
   },
 });
 
+// File filter to allow only supported image types
 const fileFilter = (
-  req: Express.Request,
+  _req: Express.Request,
   file: Express.Multer.File,
-  cb: any,
+  cb: multer.FileFilterCallback,
 ) => {
-  const allowed = /jpeg|jpg|png|pdf|webp/;
+  const allowedTypes = /jpeg|jpg|png|webp|gif/i;
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.test(ext)) cb(null, true);
-  else cb(new Error("Unsupported file type"), false);
+  const mimeType = file.mimetype.toLowerCase();
+
+  if (allowedTypes.test(ext) && allowedTypes.test(mimeType)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Unsupported file type. Only JPEG, JPG, PNG, WEBP, GIF are allowed."));
+  }
 };
 
-const upload = multer({ storage, fileFilter });
+// Multer instance with limits for production safety
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB max file size
+    files: 10, // Max 10 files per request
+  },
+});
 
 export const singleFileUploader = upload.single("file");
-export const multiFileUploader = upload.array("files");
+export const multiFileUploader = upload.array("files", 10); // Limit to 10 files

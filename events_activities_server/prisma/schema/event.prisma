@@ -1,0 +1,43 @@
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  location    String
+  date        DateTime
+  isPremium   Boolean  @default(false)
+  price       Float    @default(0)
+  maxPeople   Int
+  category    String
+  tags        String[]
+
+  organizerId String
+  organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
+
+  // Relations
+  images   EventImage[] @relation("EventImages")
+  bookings Booking[]    @relation("EventBookings")
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@index([organizerId])
+  @@index([date])
+}
+
+model EventImage {
+  id       String  @id @default(uuid())
+  eventId  String
+  url      String
+  publicId String  @unique
+  format   String?
+  width    Int?
+  height   Int?
+  bytes    Int?
+  folder   String?
+
+  createdAt DateTime @default(now())
+
+  event Event @relation("EventImages", fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId])
+}
