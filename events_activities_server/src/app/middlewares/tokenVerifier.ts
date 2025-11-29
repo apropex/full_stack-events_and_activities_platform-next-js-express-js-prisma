@@ -4,7 +4,6 @@ import ApiError from "../../lib/ApiError";
 import { verifyAccessToken } from "../../lib/jwt";
 import { sCode } from "../../utils";
 
-
 export const tokenVerifier = (
   req: Request,
   res: Response,

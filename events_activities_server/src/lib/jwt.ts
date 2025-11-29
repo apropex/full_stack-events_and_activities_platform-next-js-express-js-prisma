@@ -4,7 +4,6 @@ import { sCode } from "../utils";
 import ApiError from "./ApiError";
 import env from "./config/env";
 
-
 export type UserTokenPayload = Partial<User> & {
   secondaryId?: string;
   avatar?: string;

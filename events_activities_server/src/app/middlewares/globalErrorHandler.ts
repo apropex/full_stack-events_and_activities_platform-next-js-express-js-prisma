@@ -5,7 +5,6 @@ import ApiError from "../../lib/ApiError";
 import { deleteImageFromCloud } from "../../lib/config/cloudinary/deleteImageFromCloud";
 import { isProd } from "../../lib/config/env";
 
-
 interface ErrorResponse {
   message: string;
   error: {

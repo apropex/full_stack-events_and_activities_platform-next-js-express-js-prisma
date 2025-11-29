@@ -4,7 +4,6 @@ import ApiError from "../../lib/ApiError";
 import { verifyAccessToken } from "../../lib/jwt";
 import { sCode } from "../../utils";
 
-
 export const roleVerifier =
   (...roles: string[]) =>
   (req: Request, res: Response, next: NextFunction) => {
