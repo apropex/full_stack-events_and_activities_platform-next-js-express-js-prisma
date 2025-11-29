@@ -2,8 +2,6 @@
 
 import { isProd } from "../lib/config/env";
 
-
-
 /**
  * Environment Variable Checker Utility
  * ------------------------------------

@@ -5,9 +5,7 @@ import notFound from "./app/middlewares/notFound";
 import router from "./app/routes";
 import { isProd } from "./lib/config/env";
 
-
 const app: Application = express();
-
 
 app.use(
   cors({
@@ -20,8 +18,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
-
 
 app.use("/api/v1", router);
 

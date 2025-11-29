@@ -2,7 +2,6 @@ import http, { Server } from "http";
 import app from "./app";
 import env from "./lib/config/env";
 
-
 let server: Server | null = null;
 
 async function connectToDB() {

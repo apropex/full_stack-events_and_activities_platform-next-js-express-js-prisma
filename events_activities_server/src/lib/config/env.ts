@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { envChecker } from "../../utils/envChecker";
 
-
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 export const ENV = process.env;
@@ -26,7 +25,6 @@ interface iENV {
 }
 
 const env = {
-  
   port: Number(ENV.PORT),
   client_url: ENV.CLIENT_URL,
   database_url: ENV.DATABASE_URL,
