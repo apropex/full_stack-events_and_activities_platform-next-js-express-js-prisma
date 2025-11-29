@@ -1,0 +1,31 @@
+
+bun add -D prisma@latest prettier-plugin-prisma
+bun add @prisma/client@latest
+bunx prisma init
+
+bunx prisma migrate dev --name init
+bunx prisma generate
+
+bunx prisma migrate reset
+
+
+
+touch review.routes.ts review.controller.ts review.service.ts review.validation.ts review.interface.ts review.constants.ts 
+
+
+
+// stripe webhook command
+stripe login // first-time
+stripe listen --forward-to localhost:5000/webhook
+stripe trigger payment_intent.succeeded // if needed
+
+
+
+
+ @types/cookie-parser @types/cors @types/express @types/jsonwebtoken @types/multer @types/node ts-node-dev typescript
+
+
+
+
+
+আপনি যে ধরনের স্ক্যানারের ছবি দিয়েছেন, সেটি সাধারণত একটি পেরিফেরাল ডিভাইস হিসেবে কাজ করে, যা কিবোর্ডের মতো ডেটা ইনপুট দেয়। এই ধরনের স্ক্যানারকে "কিবোর্ড ওয়েজ" বা "কিবোর্ড এমুলেশন" স্ক্যানার বলা হয়। যখন আপনি এই স্ক্যানার দিয়ে কোনো বারকোড স্ক্যান করেন, তখন এটি বারকোডের তথ্যকে একটি সাধারণ টেক্সট হিসেবে রূপান্তর করে এবং এটি সংযুক্ত কম্পিউটারের একটি ইনপুট ফিল্ডে টাইপ করে দেয়, ঠিক যেমন একজন ব্যবহারকারী কিবোর্ডে টাইপ করে। কিছু স্ক্যানার স্ক্যান করার পর স্বয়ংক্রিয়ভাবে 'Enter' কি-ও প্রেস করে।
