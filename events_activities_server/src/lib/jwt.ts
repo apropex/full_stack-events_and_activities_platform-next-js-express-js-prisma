@@ -4,33 +4,25 @@ import { sCode } from "../utils";
 import ApiError from "./ApiError";
 import env from "./config/env";
 
-export type UserTokenPayload = Partial<User> & {
-  secondaryId?: string;
-  avatar?: string;
-  name?: string;
-};
-
-const payloadMaker = ({
-  id,
-  email,
-  role,
-  status,
-  avatar,
-  name,
-}: UserTokenPayload) => {
+const payloadMaker = (user: Partial<User>) => {
   return {
-    id,
-    email,
-    role,
-    status,
-    avatar,
-    name,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    gender: user.gender,
+    role: user.role,
+    avatar: user.avatar,
+    status: user.status,
+    isVerified: user.isVerified,
+    isDeleted: user.isDeleted,
+    isPremium: user.isPremium,
   };
 };
 
 //* GENERATE ACCESS TOKEN
 export const generateAccessToken = (
-  userPayload: UserTokenPayload,
+  userPayload: Partial<User>,
   { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
   //
@@ -54,7 +46,7 @@ export const generateAccessToken = (
 
 //* GENERATE REFRESH TOKEN
 export const generateRefreshToken = (
-  userPayload: UserTokenPayload,
+  userPayload: Partial<User>,
   { secretKey, period }: { secretKey?: string; period?: string } = {},
 ) => {
   //

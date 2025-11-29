@@ -1,12 +1,18 @@
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(USER)
-  avatar    String?
-  bio       String?
-  interests String[] // like: ["Hiking", "Music", "Coding"]
-  isPremium Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  password   String
+  phone      String?
+  gender     Gender
+  role       Role       @default(USER)
+  avatar     String?
+  bio        String?
+  interests  String[] // like: ["Hiking", "Music", "Coding"]
+  status     UserStatus @default(ACTIVE)
+  isVerified Boolean    @default(false)
+  isDeleted  Boolean    @default(false)
+  isPremium  Boolean    @default(false)
+  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime   @default(now())
 }
