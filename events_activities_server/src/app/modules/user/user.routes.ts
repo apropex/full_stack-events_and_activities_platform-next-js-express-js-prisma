@@ -13,7 +13,7 @@ router.get("/me", tokenVerifier, userController.getMe);
 
 router.get("/:id", tokenVerifier, userController.getUserById);
 
-router.get('/all', roleVerifier(Role.ADMIN), userController.getAllUsers)
+router.get("/all", roleVerifier(Role.ADMIN), userController.getAllUsers);
 
 router.post(
   "/",

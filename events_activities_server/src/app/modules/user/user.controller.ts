@@ -89,9 +89,11 @@ export const softDeleteUser = catchAsync(async (req, res) => {
 
 //* GET ALL USERS *\\
 export const getAllUsers = catchAsync(async (req, res) => {
-  const users = await userService.getAllUsers(req.query);
+  const { data, meta } = await userService.getAllUsers(req.query);
+
   _response(res, {
     message: "Users retrieved successfully!",
-    data: users,
+    data,
+    meta,
   });
 });

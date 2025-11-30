@@ -1,11 +1,13 @@
 import http, { Server } from "http";
 import app from "./app";
 import env from "./lib/config/env";
+import { connectRedis } from "./lib/redis";
 
 let server: Server | null = null;
 
 async function connectToDB() {
   try {
+    await connectRedis();
     console.log("✔ DB connection successful!");
   } catch (error) {
     console.log("❌ DB connection failed!");

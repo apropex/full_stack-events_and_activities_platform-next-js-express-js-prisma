@@ -22,6 +22,14 @@ interface iENV {
     api_key: string;
     api_secret: string;
   };
+
+  redis: {
+    username: string;
+    pass: string;
+    host: string;
+    port: number;
+    otp_expiration: number;
+  };
 }
 
 const env = {
@@ -39,6 +47,13 @@ const env = {
     cloud_name: ENV.CLOUDINARY_CLOUD_NAME,
     api_key: ENV.CLOUDINARY_API_KEY,
     api_secret: ENV.CLOUDINARY_API_SECRET,
+  },
+  redis: {
+    username: ENV.REDIS_USERNAME,
+    pass: ENV.REDIS_PASS,
+    host: ENV.REDIS_HOST,
+    port: Number(ENV.REDIS_PORT),
+    otp_expiration: Number(ENV.REDIS_OTP_EXPIRATION),
   },
 } as iENV;
 
