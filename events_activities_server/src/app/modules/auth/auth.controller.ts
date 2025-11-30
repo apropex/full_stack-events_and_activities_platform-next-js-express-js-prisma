@@ -33,6 +33,41 @@ export const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
+//* VERIFY USER *\\
+export const verifyUser = catchAsync(async (req, res) => {
+  const result = await authServices.verifyUser(req.body);
+
+  _response(res, {
+    message: "Operation successful!",
+    data: result,
+  });
+});
+
+//* FORGOT PASSWORD *\\
+export const forgotPassword = catchAsync(async (req, res) => {
+  const result = await authServices.forgotPassword(req.body);
+
+  const { access_token, ...rest } = result ?? ({} as any);
+
+  if (access_token) {
+    setCookie.accessToken(res, access_token);
+  }
+
+  _response(res, {
+    message: "Operation successful!",
+    data: rest,
+  });
+});
+
+//* RESET FORGOT PASSWORD *\\
+export const resetForgotPassword = catchAsync(async (req, res) => {
+  await authServices.resetForgotPassword(req.decoded?.id ?? "", req.body);
+
+  _response(res, {
+    message: "Password updated successfully!",
+  });
+});
+
 //* GET ACCESS TOKEN BY REFRESH TOKEN *\\
 export const getAccessTokenByRefreshToken = catchAsync(async (req, res) => {
   const existingRefreshToken = req.cookies.refreshToken;

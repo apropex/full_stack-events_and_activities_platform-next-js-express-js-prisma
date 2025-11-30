@@ -1,23 +1,33 @@
-import { User } from "@prisma/client";
+import { User, UserAvatar } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { sCode } from "../utils";
 import ApiError from "./ApiError";
 import env from "./config/env";
 
-const payloadMaker = (user: Partial<User>) => {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    phone: user.phone,
-    gender: user.gender,
-    role: user.role,
-    avatar: user.avatar,
-    status: user.status,
-    isVerified: user.isVerified,
-    isDeleted: user.isDeleted,
-    isPremium: user.isPremium,
+export type iJwtPayloadMaker = Partial<
+  Partial<User> & {
+    avatar: UserAvatar;
+  }
+>;
+
+const payloadMaker = (user: iJwtPayloadMaker) => {
+  const payload = {} as Partial<User> & {
+    avatar: string;
   };
+
+  if (user.id) payload.id = user.id;
+  if (user.name) payload.name = user.name;
+  if (user.email) payload.email = user.email;
+  if (user.phone) payload.phone = user.phone;
+  if (user.gender) payload.gender = user.gender;
+  if (user.role) payload.role = user.role;
+  if (user.avatar) payload.avatar = user.avatar.url;
+  if (user.status) payload.status = user.status;
+  if ("isVerified" in user) payload.isVerified = user.isVerified;
+  if ("isDeleted" in user) payload.isDeleted = user.isDeleted;
+  if ("isPremium" in user) payload.isPremium = user.isPremium;
+
+  return payload;
 };
 
 //* GENERATE ACCESS TOKEN
