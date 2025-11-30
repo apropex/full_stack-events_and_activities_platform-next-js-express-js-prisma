@@ -1,14 +1,17 @@
 model Event {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  location    String
-  date        DateTime
-  isPremium   Boolean  @default(false)
-  price       Float    @default(0)
-  maxPeople   Int
-  category    String
-  tags        String[]
+  id            String              @id @default(uuid())
+  title         String
+  description   String
+  location      String
+  date          DateTime
+  isPremium     Boolean             @default(false)
+  price         Float               @default(0)
+  maxPeople     Int
+  category      String
+  tags          String[]
+  approveStatus EventApprovalStatus @default(PENDING)
+  status        EventStatus         @default(UPCOMING)
+  type          EventType           @default(OFFLINE)
 
   organizerId String
   organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
