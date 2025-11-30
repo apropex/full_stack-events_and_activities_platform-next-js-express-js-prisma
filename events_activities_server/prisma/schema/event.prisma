@@ -13,6 +13,9 @@ model Event {
   status        EventStatus         @default(UPCOMING)
   type          EventType           @default(OFFLINE)
 
+  isDeleted Boolean @default(false)
+  deletedBy String?
+
   organizerId String
   organizer   User   @relation("EventOrganizer", fields: [organizerId], references: [id], onDelete: Cascade)
 

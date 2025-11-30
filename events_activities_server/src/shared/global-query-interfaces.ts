@@ -17,7 +17,7 @@ export interface iSearchQuery {
 
 type iPaginationAndSearchQuery = iPaginationQuery & iSearchQuery;
 
-//* USER QUERY INTERFACES
+//* USER QUERY INTERFACE
 export interface iUserSearchQuery extends iPaginationAndSearchQuery {
   id: string;
   name: string;
@@ -31,4 +31,22 @@ export interface iUserSearchQuery extends iPaginationAndSearchQuery {
   isVerified: string;
   isDeleted: string;
   isPremium: string;
+}
+
+//* USER EVENT INTERFACE
+export interface iEventSearchQuery {
+  id: string;
+  title: string;
+  description: string;
+  location: string;
+  date: string;
+  isPremium: string;
+  price: string;
+  maxPeople: string;
+  category: string;
+  tags: string;
+  approveStatus: string;
+  status: string;
+  type: string;
+  organizerId: string;
 }

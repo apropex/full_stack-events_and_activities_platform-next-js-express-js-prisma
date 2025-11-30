@@ -1,7 +1,7 @@
 import { EventStatus, EventType } from "@prisma/client";
 import z from "zod";
 
-export const CreateEventPayloadSchema = z
+export const EventPayloadSchema = z
   .object({
     title: z.string().trim().min(1, { message: "Title is required" }),
 
