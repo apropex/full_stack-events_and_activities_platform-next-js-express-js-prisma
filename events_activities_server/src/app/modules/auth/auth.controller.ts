@@ -1,5 +1,7 @@
 import { User, UserStatus } from "@prisma/client";
+import * as jwt from "jsonwebtoken";
 import ApiError from "../../../lib/ApiError";
+import env, { isProd } from "../../../lib/config/env";
 import { setCookie } from "../../../lib/cookie";
 import {
   generateAccessToken,
@@ -10,6 +12,7 @@ import prisma from "../../../lib/prisma";
 import catchAsync from "../../../shared/catchAsync";
 import _response from "../../../shared/sendResponse";
 import { sCode } from "../../../utils";
+import { getDuration } from "../../../utils/time_unit";
 import * as authServices from "./auth.service";
 
 //* USER LOGIN *\\
@@ -47,10 +50,16 @@ export const verifyUser = catchAsync(async (req, res) => {
 export const forgotPassword = catchAsync(async (req, res) => {
   const result = await authServices.forgotPassword(req.body);
 
-  const { access_token, ...rest } = result ?? ({} as any);
+  const { temp_token, ...rest } = result ?? ({} as any);
 
-  if (access_token) {
-    setCookie.accessToken(res, access_token);
+  if (temp_token) {
+    res.cookie("temp_token", temp_token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? ("none" as const) : ("lax" as const),
+      path: "/api/v1/auth/reset-forgot-password",
+      maxAge: getDuration(env.jwt.temp_token_expire_time),
+    });
   }
 
   _response(res, {
@@ -61,7 +70,19 @@ export const forgotPassword = catchAsync(async (req, res) => {
 
 //* RESET FORGOT PASSWORD *\\
 export const resetForgotPassword = catchAsync(async (req, res) => {
-  await authServices.resetForgotPassword(req.decoded?.id ?? "", req.body);
+  const temp_token = req.cookies.temp_token;
+
+  if (!temp_token) {
+    setCookie.clearCookies(res);
+    throw new ApiError(sCode.UNAUTHORIZED, "Token is missing");
+  }
+
+  const decoded = jwt.verify(temp_token, env.jwt.temp_token_secret);
+
+  if (!decoded || typeof decoded === "string")
+    throw new ApiError(sCode.UNAUTHORIZED, "Token is not valid");
+
+  await authServices.resetForgotPassword(decoded.id ?? "", req.body);
 
   _response(res, {
     message: "Password updated successfully!",

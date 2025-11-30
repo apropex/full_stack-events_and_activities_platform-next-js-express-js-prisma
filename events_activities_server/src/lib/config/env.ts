@@ -16,6 +16,8 @@ interface iENV {
     access_token_expire_time: string;
     refresh_token_secret: string;
     refresh_token_expire_time: string;
+    temp_token_secret: string;
+    temp_token_expire_time: string;
   };
   cloudinary: {
     cloud_name: string;
@@ -42,6 +44,8 @@ const env = {
     access_token_expire_time: ENV.ACCESS_TOKEN_EXPIRE_TIME,
     refresh_token_secret: ENV.REFRESH_TOKEN_SECRET,
     refresh_token_expire_time: ENV.REFRESH_TOKEN_EXPIRE_TIME,
+    temp_token_secret: ENV.TEMP_TOKEN_SECRET,
+    temp_token_expire_time: ENV.TEMP_TOKEN_EXPIRE_TIME,
   },
   cloudinary: {
     cloud_name: ENV.CLOUDINARY_CLOUD_NAME,

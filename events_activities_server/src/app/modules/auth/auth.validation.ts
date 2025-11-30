@@ -1,4 +1,5 @@
 import z from "zod";
+import { PasswordSchema } from "../../../shared/password_schema";
 
 export const LoginSchema = z.object({
   email: z.email("Enter a valid email address"),
@@ -9,7 +10,7 @@ export type iLoginPayload = z.infer<typeof LoginSchema>;
 
 export const ResetPasswordSchema = z.object({
   oldPassword: z.string({ error: "Enter a valid old password" }),
-  newPassword: z.string({ error: "New password must be a string type" }),
+  newPassword: PasswordSchema,
 });
 
 export type iResetPasswordPayload = z.infer<typeof ResetPasswordSchema>;
@@ -23,3 +24,7 @@ export const OtpVerifyPayloadSchema = z.object({
 });
 
 export type iOtpVerifyPayload = z.infer<typeof OtpVerifyPayloadSchema>;
+
+export const ResetForgotPasswordPayloadSchema = z.object({
+  newPassword: PasswordSchema,
+});

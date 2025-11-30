@@ -1,5 +1,7 @@
 import { UserStatus } from "@prisma/client";
+import * as jwt from "jsonwebtoken";
 import ApiError from "../../../lib/ApiError";
+import env from "../../../lib/config/env";
 import { setOtp, verifyOtp } from "../../../lib/config/redis.config";
 import { generateAccessToken, generateRefreshToken } from "../../../lib/jwt";
 import prisma from "../../../lib/prisma";
@@ -51,8 +53,16 @@ export const resetPassword = async (
 //* VERIFY USER *\\
 export const verifyUser = async ({ email, option, otp }: iOtpVerifyPayload) => {
   const existingUser = await prisma.user.findUnique({ where: { email } });
+
   if (!existingUser) {
     throw new ApiError(sCode.NOT_FOUND, "User does not exist with this email");
+  }
+
+  if (existingUser.isDeleted) {
+    throw new ApiError(
+      sCode.BAD_REQUEST,
+      "User was deleted, contact to support",
+    );
   }
 
   if (existingUser.isVerified) {
@@ -108,11 +118,20 @@ export const forgotPassword = async ({
     const result = await verifyOtp(email, otp);
 
     if (result.success) {
-      const access_token = generateAccessToken(
+      const temp_token = jwt.sign(
         { id: existingUser.id },
-        { period: "5m" },
+        env.jwt.temp_token_secret,
+        { expiresIn: env.jwt.temp_token_expire_time } as jwt.SignOptions,
       );
-      return { access_token };
+
+      if (!temp_token) {
+        throw new ApiError(
+          sCode.EXPECTATION_FAILED,
+          "Failed to generate token",
+        );
+      }
+
+      return { temp_token };
     }
   }
 };

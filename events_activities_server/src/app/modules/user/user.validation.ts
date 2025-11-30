@@ -1,9 +1,10 @@
 import z from "zod";
+import { PasswordSchema } from "../../../shared/password_schema";
 
 export const CreateUserSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters long"),
+  password: PasswordSchema,
   phone: z.string().optional(),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]),
   bio: z.string().max(160, "Bio must be maximum 160 characters").optional(),
