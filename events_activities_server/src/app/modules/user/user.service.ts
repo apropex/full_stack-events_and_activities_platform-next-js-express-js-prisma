@@ -2,8 +2,17 @@ import { Prisma, User } from "@prisma/client";
 import type { UploadApiResponse } from "cloudinary";
 import ApiError from "../../../lib/ApiError";
 import prisma from "../../../lib/prisma";
+import { iQuery } from "../../../shared/global-query-interfaces";
 import { buildHash } from "../../../utils/bcrypt";
+import configureQuery, {
+  getSearchFilters,
+} from "../../../utils/configureQuery";
 import { deleteImageFromCloud } from "../../../utils/deleteImageFromCloud";
+import {
+  userBooleanFields,
+  userFilterFields,
+  userSearchFields,
+} from "./user.constants";
 
 //* CREATE A NEW USER *\\
 export const createUser = async (
@@ -126,4 +135,61 @@ export const getUserByEmail = async (email: string) => {
     omit: { password: true },
   });
   return user;
+};
+
+//* GET ALL USERS *\\
+
+type WhereInput = Prisma.UserWhereInput;
+
+export const getAllUsers = async (query: iQuery) => {
+  const { page, take, skip, orderBy, search, filters } = configureQuery(query, {
+    filterFields: userFilterFields,
+    booleanFields: userBooleanFields,
+  });
+
+  const { interests, ...restFilters } = filters;
+
+  const where = getSearchFilters({
+    searchFields: userSearchFields,
+    search,
+    filters: { ...restFilters },
+  }) as WhereInput;
+
+  if (!Array.isArray(where?.AND)) where.AND = [];
+
+  const interestsArray = (interests as string)
+    ?.split(" ")
+    .map((interest) => interest.trim())
+    ?.filter((interest) => interest.length > 0);
+
+  if (interestsArray && interestsArray.length > 0) {
+    where.AND.push({
+      interests: {
+        hasSome: interestsArray,
+      },
+    });
+  }
+
+  const include = {
+    avatar: true,
+  };
+
+  const [users, total_records, filtered_records] = await Promise.all([
+    prisma.user.findMany({ where, orderBy, skip, take, include }),
+    prisma.user.count(),
+    prisma.user.count({ where }),
+  ]);
+
+  return {
+    data: users,
+    meta: {
+      total_records,
+      filtered_records,
+      present_records: users.length ?? 0,
+      total_pages: Math.ceil(filtered_records / take),
+      present_page: page,
+      skip,
+      limit: take,
+    },
+  };
 };

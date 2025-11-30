@@ -4,7 +4,6 @@ import { sCode } from "../utils";
 import ApiError from "./ApiError";
 import { cloudinary } from "./config/cloudinary/cloudinary.config";
 
-
 /**
  * Uploads a file to Cloudinary with retry logic and automatic local file cleanup.
  * Returns the full Cloudinary response for storage in Prisma models (e.g., UserAvatar or EventImage).
@@ -47,13 +46,18 @@ export const fileUploader = async (
       );
 
       // Exponential backoff delay
-      await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempt)));
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1000 * Math.pow(2, attempt)),
+      );
     }
   }
 
   // Clean up local file on final failure
   await fs.unlink(file.path).catch((err) => {
-    console.error(`Failed to delete local file ${file.path} after upload failure:`, err);
+    console.error(
+      `Failed to delete local file ${file.path} after upload failure:`,
+      err,
+    );
   });
 
   throw new ApiError(
@@ -77,7 +81,9 @@ export const multiFileUploaderToCloud = async (
   folder?: string,
   maxRetries: number = 3,
 ): Promise<UploadApiResponse[]> => {
-  const uploadPromises = files.map((file) => fileUploader(file,folder, maxRetries));
+  const uploadPromises = files.map((file) =>
+    fileUploader(file, folder, maxRetries),
+  );
 
   try {
     return await Promise.all(uploadPromises);
@@ -86,7 +92,10 @@ export const multiFileUploaderToCloud = async (
     await Promise.all(
       files.map((file) =>
         fs.unlink(file.path).catch((err) => {
-          console.warn(`Failed to delete local file ${file.path} after multi-upload error:`, err);
+          console.warn(
+            `Failed to delete local file ${file.path} after multi-upload error:`,
+            err,
+          );
         }),
       ),
     );

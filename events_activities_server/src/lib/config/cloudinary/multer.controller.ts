@@ -11,7 +11,6 @@ if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
-
 // Configure Multer storage
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
@@ -43,7 +42,11 @@ const fileFilter = (
   if (allowedTypes.test(ext) && allowedTypes.test(mimeType)) {
     cb(null, true);
   } else {
-    cb(new Error("Unsupported file type. Only JPEG, JPG, PNG, WEBP, GIF are allowed."));
+    cb(
+      new Error(
+        "Unsupported file type. Only JPEG, JPG, PNG, WEBP, GIF are allowed.",
+      ),
+    );
   }
 };
 

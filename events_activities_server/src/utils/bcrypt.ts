@@ -3,7 +3,6 @@ import httpStatus from "http-status";
 import ApiError from "../lib/ApiError";
 import env from "../lib/config/env";
 
-
 //
 
 export async function buildHash(password: string): Promise<string> {

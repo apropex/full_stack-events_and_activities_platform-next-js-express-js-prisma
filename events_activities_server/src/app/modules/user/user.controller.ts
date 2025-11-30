@@ -6,6 +6,7 @@ import catchAsync from "../../../shared/catchAsync";
 import _response from "../../../shared/sendResponse";
 import * as userService from "./user.service";
 
+//* CREATE USER *\\
 export const createUser = catchAsync(async (req, res) => {
   const payload = req.body;
   let file: UploadApiResponse | null = null;
@@ -22,6 +23,7 @@ export const createUser = catchAsync(async (req, res) => {
   });
 });
 
+//* UPDATE USER *\\
 export const updateUser = catchAsync(async (req, res) => {
   const payload = req.body;
   let file: UploadApiResponse | null = null;
@@ -47,6 +49,7 @@ export const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+//* GET USER BY ID *\\
 export const getUserById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const user = await userService.getUserById(id);
@@ -56,6 +59,7 @@ export const getUserById = catchAsync(async (req, res) => {
   });
 });
 
+//* GET ME *\\
 export const getMe = catchAsync(async (req, res) => {
   const userId = req.decoded?.id ?? "";
   const user = await userService.getUserById(userId);
@@ -65,6 +69,7 @@ export const getMe = catchAsync(async (req, res) => {
   });
 });
 
+//* SOFT DELETE USER *\\
 export const softDeleteUser = catchAsync(async (req, res) => {
   const user = req.decoded ?? ({} as JwtPayload);
   const { id } = req.params;
@@ -79,5 +84,14 @@ export const softDeleteUser = catchAsync(async (req, res) => {
   _response(res, {
     message: "User deleted successfully!",
     data: null,
+  });
+});
+
+//* GET ALL USERS *\\
+export const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userService.getAllUsers(req.query);
+  _response(res, {
+    message: "Users retrieved successfully!",
+    data: users,
   });
 });

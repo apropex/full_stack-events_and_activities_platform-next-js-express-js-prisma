@@ -2,7 +2,6 @@ import { sCode } from ".";
 import ApiError from "../lib/ApiError";
 import { cloudinary } from "../lib/config/cloudinary/cloudinary.config";
 
-
 /**
  * Deletes an image from Cloudinary using its public ID.
  * This function is designed to be called after retrieving the public ID from the Prisma model (e.g., UserAvatar or EventImage).
@@ -13,7 +12,10 @@ import { cloudinary } from "../lib/config/cloudinary/cloudinary.config";
  */
 export const deleteImageFromCloud = async (publicId: string): Promise<void> => {
   if (!publicId) {
-    throw new ApiError(sCode.BAD_REQUEST, "Public ID is required for image deletion");
+    throw new ApiError(
+      sCode.BAD_REQUEST,
+      "Public ID is required for image deletion",
+    );
   }
 
   try {
@@ -23,6 +25,9 @@ export const deleteImageFromCloud = async (publicId: string): Promise<void> => {
     }
   } catch (error) {
     console.error("Cloudinary image deletion error:", error);
-    throw new ApiError(sCode.INTERNAL_SERVER_ERROR, "Failed to delete image from Cloudinary");
+    throw new ApiError(
+      sCode.INTERNAL_SERVER_ERROR,
+      "Failed to delete image from Cloudinary",
+    );
   }
 };
