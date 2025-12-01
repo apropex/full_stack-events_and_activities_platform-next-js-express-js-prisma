@@ -12,13 +12,15 @@ import {
 
 const router = Router();
 
+const { SUPER_ADMIN, ADMIN, HOST } = Role;
+
 router.get("/", eventControllers.getAllEvents);
 
 router.get("/:id", tokenVerifier, eventControllers.getEventById);
 
 router.post(
   "/create",
-  tokenVerifier,
+  roleVerifier(SUPER_ADMIN, ADMIN, HOST),
   multiFileUploader,
   validateRequest(CreateEventPayloadSchema),
   eventControllers.createEvent,
@@ -26,7 +28,7 @@ router.post(
 
 router.post(
   "/update",
-  tokenVerifier,
+  roleVerifier(SUPER_ADMIN, ADMIN, HOST),
   multiFileUploader,
   validateRequest(UpdateEventPayloadSchema),
   eventControllers.updateEvent,
@@ -34,13 +36,13 @@ router.post(
 
 router.delete(
   "/soft-delete/:id",
-  tokenVerifier,
+  roleVerifier(SUPER_ADMIN, ADMIN, HOST),
   eventControllers.eventSoftDelete,
 );
 
 router.delete(
   "/hard-delete/:id",
-  roleVerifier(Role.ADMIN),
+  roleVerifier(SUPER_ADMIN, ADMIN),
   eventControllers.eventHardDelete,
 );
 

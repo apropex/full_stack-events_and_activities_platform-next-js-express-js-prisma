@@ -1,7 +1,8 @@
 enum Role {
-  USER
-  HOST
+  SUPER_ADMIN
   ADMIN
+  HOST
+  USER
 }
 
 enum UserStatus {

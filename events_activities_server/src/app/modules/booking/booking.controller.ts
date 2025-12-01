@@ -20,11 +20,12 @@ export const createBooking = catchAsync(async (req, res) => {
 
 //
 export const getAllBookings = catchAsync(async (req, res) => {
-  const result = await bookingServices.getAllBookings(req.query);
+  const { data, meta } = await bookingServices.getAllBookings(req.query);
 
   _response(res, {
     message: "All bookings retrieved successfully!",
-    data: result,
+    data,
+    meta,
   });
 });
 
@@ -37,11 +38,15 @@ export const getMyBookings = catchAsync(async (req, res) => {
     );
   }
 
-  const result = await bookingServices.getMyBookings(req.decoded.id, req.query);
+  const { data, meta } = await bookingServices.getMyBookings(
+    req.decoded.id,
+    req.query,
+  );
 
   _response(res, {
     message: "User bookings retrieved successfully!",
-    data: result,
+    data,
+    meta,
   });
 });
 
@@ -53,7 +58,7 @@ export const updateBookingStatus = catchAsync(async (req, res) => {
   );
 
   _response(res, {
-    message: "Booking updated successfully!",
+    message: "Booking status updated successfully!",
     data: result,
   });
 });
