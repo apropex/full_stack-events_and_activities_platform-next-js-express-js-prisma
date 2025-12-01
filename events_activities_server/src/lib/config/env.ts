@@ -32,6 +32,20 @@ interface iENV {
     port: number;
     otp_expiration: number;
   };
+
+  ssl: {
+    store_id: string;
+    store_pass: string;
+    payment_api: string;
+    validation_api: string;
+    ipn_url: string;
+    success_server_url: string;
+    fail_server_url: string;
+    cancel_server_url: string;
+    success_client_url: string;
+    fail_client_url: string;
+    cancel_client_url: string;
+  };
 }
 
 const env = {
@@ -58,6 +72,19 @@ const env = {
     host: ENV.REDIS_HOST,
     port: Number(ENV.REDIS_PORT),
     otp_expiration: Number(ENV.REDIS_OTP_EXPIRATION),
+  },
+  ssl: {
+    store_id: ENV.SSL_STORE_ID,
+    store_pass: ENV.SSL_STORE_PASS,
+    payment_api: ENV.SSL_PAYMENT_API,
+    validation_api: ENV.SSL_VALIDATION_API,
+    ipn_url: ENV.SSL_IPN_URL,
+    success_server_url: ENV.SSL_SUCCESS_SERVER_URL,
+    fail_server_url: ENV.SSL_FAIL_SERVER_URL,
+    cancel_server_url: ENV.SSL_CANCEL_SERVER_URL,
+    success_client_url: ENV.SSL_SUCCESS_CLIENT_URL,
+    fail_client_url: ENV.SSL_FAIL_CLIENT_URL,
+    cancel_client_url: ENV.SSL_CANCEL_CLIENT_URL,
   },
 } as iENV;
 
