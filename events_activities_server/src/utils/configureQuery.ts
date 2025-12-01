@@ -7,7 +7,7 @@ import pickQuery from "./pickQuery";
 //* CONFIGURE QUERY
 
 interface iOptions<K> {
-  filterFields: K[];
+  filterFields?: K[];
   booleanFields?: K[];
   numberFields?: K[];
 }
@@ -15,15 +15,15 @@ interface iOptions<K> {
 export default function configureQuery<
   T extends Record<string, unknown>,
   K extends keyof T,
->(query: T, options: iOptions<K>) {
+>(query: T, options?: iOptions<K>) {
   const { limit, sortBy, sortOrder, search = "" } = query;
 
   const filteredQuery = checkBooleanAndNumber(query, {
-    booleanFields: options.booleanFields,
-    numberFields: options.numberFields,
+    booleanFields: options?.booleanFields ?? [],
+    numberFields: options?.numberFields ?? [],
   });
 
-  const filters = pickQuery(filteredQuery, ...options.filterFields);
+  const filters = pickQuery(filteredQuery, ...(options?.filterFields ?? []));
 
   const page = Number(query.page || "1");
   const take = Number(limit || "12");
