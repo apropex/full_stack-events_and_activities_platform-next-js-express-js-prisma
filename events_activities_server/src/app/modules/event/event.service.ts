@@ -8,6 +8,7 @@ import { sCode } from "../../../utils";
 import configureQuery, {
   getSearchFilters,
 } from "../../../utils/configureQuery";
+import { deleteImageFromCloud } from "../../../utils/deleteImageFromCloud";
 import {
   eventBooleanFields,
   eventFilterFields,
@@ -56,9 +57,15 @@ export const createEvent = async (
 export const updateEvent = async (
   decoded: JwtPayload,
   eventId: string,
-  payload: Event,
+  { deletedImages, ...payload }: Event & { deletedImages?: string[] },
+  files: UploadApiResponse[] | null,
 ) => {
-  const event = await prisma.event.findUnique({ where: { id: eventId } });
+  const event = await prisma.event.findUnique({
+    where: { id: eventId },
+    include: {
+      images: true,
+    },
+  });
 
   if (!event) throw new ApiError(sCode.NOT_FOUND, "Event not found");
 
@@ -69,7 +76,35 @@ export const updateEvent = async (
     );
   }
 
-  return await prisma.event.update({ where: { id: eventId }, data: payload });
+  return await prisma.$transaction(async (trx) => {
+    if (Array.isArray(deletedImages) && deletedImages.length) {
+      await Promise.all(
+        deletedImages.map((pId) =>
+          trx.eventImage.delete({ where: { publicId: pId } }),
+        ),
+      );
+
+      await Promise.allSettled(
+        deletedImages.map((pId) => deleteImageFromCloud(pId)),
+      );
+    }
+
+    if (files) {
+      await Promise.allSettled(
+        files.map((file) =>
+          trx.eventImage.create({
+            data: {
+              eventId: event.id,
+              url: file.secure_url,
+              publicId: file.public_id,
+            },
+          }),
+        ),
+      );
+    }
+
+    return await trx.event.update({ where: { id: eventId }, data: payload });
+  });
 };
 
 //* GET EVENT BY ID *\\

@@ -1,7 +1,7 @@
 import { EventStatus, EventType } from "@prisma/client";
 import z from "zod";
 
-export const EventPayloadSchema = z
+export const CreateEventPayloadSchema = z
   .object({
     title: z.string().trim().min(1, { message: "Title is required" }),
 
@@ -58,3 +58,9 @@ export const EventPayloadSchema = z
       });
     }
   });
+
+export const UpdateEventPayloadSchema = z
+  .object({
+    deletedImages: z.array(z.string()).optional(),
+  })
+  .extend(CreateEventPayloadSchema.shape);

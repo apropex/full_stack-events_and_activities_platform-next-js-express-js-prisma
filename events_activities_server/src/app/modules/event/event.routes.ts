@@ -5,7 +5,10 @@ import { roleVerifier } from "../../middlewares/roleVerifier";
 import { tokenVerifier } from "../../middlewares/tokenVerifier";
 import validateRequest from "../../middlewares/validateRequest";
 import * as eventControllers from "./event.controller";
-import { EventPayloadSchema } from "./event.validation";
+import {
+  CreateEventPayloadSchema,
+  UpdateEventPayloadSchema,
+} from "./event.validation";
 
 const router = Router();
 
@@ -17,7 +20,7 @@ router.post(
   "/create",
   tokenVerifier,
   multiFileUploader,
-  validateRequest(EventPayloadSchema),
+  validateRequest(CreateEventPayloadSchema),
   eventControllers.createEvent,
 );
 
@@ -25,7 +28,7 @@ router.post(
   "/update",
   tokenVerifier,
   multiFileUploader,
-  validateRequest(EventPayloadSchema),
+  validateRequest(UpdateEventPayloadSchema),
   eventControllers.updateEvent,
 );
 
