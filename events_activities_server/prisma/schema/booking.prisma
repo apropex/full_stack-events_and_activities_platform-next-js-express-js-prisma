@@ -1,14 +1,14 @@
 model Booking {
-  id            String        @id @default(uuid())
-  userId        String
-  eventId       String
-  paymentStatus PaymentStatus @default(PENDING)
+  id      String        @id @default(uuid())
+  userId  String
+  eventId String
+  status  BookingStatus @default(PENDING)
 
   // One-to-one Payment
   paymentId String?  @unique
   payment   Payment? @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
-  transactionId String?
+  trxId String?
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -24,9 +24,9 @@ model Payment {
   id          String        @id @default(uuid())
   amount      Float
   trxId       String        @unique
-  paymentInfo Json
+  paymentInfo Json?
   invoiceUrl  String?
-  status      PaymentStatus
+  status      PaymentStatus @default(PENDING)
   booking     Booking?
 
   createdAt DateTime @default(now())

@@ -7,6 +7,7 @@ model Event {
   isPremium     Boolean             @default(false)
   price         Float               @default(0)
   maxPeople     Int
+  totalBooked   Int                 @default(0)
   category      String
   tags          String[]
   approveStatus EventApprovalStatus @default(PENDING)

@@ -1,6 +1,6 @@
 export interface iSSLCommerz {
   amount: number;
-  TrxID: string;
+  trxId: string;
   name: string;
   email: string;
   phone: string;

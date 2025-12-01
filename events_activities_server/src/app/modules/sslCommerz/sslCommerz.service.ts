@@ -10,14 +10,14 @@ const ssl = env.ssl;
 
 export const sslPaymentInit = async (payload: iSSLCommerz) => {
   const urlWithTrxID = (link: string, status = "success") =>
-    `${link}?TrxID=${payload.TrxID}&amount=${payload.amount}&status=${status}`;
+    `${link}?trxId=${payload.trxId}&amount=${payload.amount}&status=${status}`;
 
   const data = {
     store_id: ssl.store_id,
     store_passwd: ssl.store_pass,
     total_amount: payload.amount,
     currency: "BDT",
-    tran_id: payload.TrxID,
+    tran_id: payload.trxId,
     success_url: urlWithTrxID(ssl.success_server_url),
     fail_url: urlWithTrxID(ssl.fail_server_url, "fail"),
     cancel_url: urlWithTrxID(ssl.cancel_server_url, "cancel"),

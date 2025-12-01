@@ -20,11 +20,13 @@ enum PaymentStatus {
   PENDING
   SUCCESS
   FAILED
+  CANCELLED
 }
 
 enum BookingStatus {
   PENDING
   CONFIRMED
+  FAILED
   CANCELLED
 }
 
